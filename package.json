@@ -1,5 +1,19 @@
 {
+	"name": "sportsysapi",
+	"version": "1.0.0",
+	"description": "Api sistema de gestion deportiva",
+	"main": "server.js",
+	"type": "module",
+	"scripts": {
+		"start": "node server.js",
+		"dev": "node --watch server.js"
+	},
 	"dependencies": {
-		"express": "^5.2.1"
+		"cors": "^2.8.6",
+		"dotenv": "^17.3.1",
+		"express": "^5.2.1",
+		"morgan": "^1.10.1",
+		"mssql": "^12.2.0",
+		"nodemon": "^3.1.14"
 	}
 }
