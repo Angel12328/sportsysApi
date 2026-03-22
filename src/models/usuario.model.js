@@ -6,7 +6,9 @@ export const UsuarioModel = {
             const pool = await sql.connect(dbConfig);
             const result = await pool.request()
                 .execute("sp_GetAllUsuarios"); // 
-            return result.recordset;
+            // El JSON resultante estará en result.output.jsonResult
+            const userData = result.output.jsonResult;
+            return userData ? JSON.parse(userData) : null;
         } catch (error) {
             return error.message;
         }
@@ -18,7 +20,8 @@ export const UsuarioModel = {
             const result = await pool.request()
                 .input('id', sql.Int, user.id)
                 .execute("sp_GetUsuarioById"); // 
-            return result.recordset[0];
+            const userData = result.output.jsonResult;
+            return userData ? JSON.parse(userData) : null;
         } catch (error) {
             return error.message;
         }
@@ -83,7 +86,8 @@ export const UsuarioModel = {
                 .input('email', sql.VarChar, email)
                 .input('password', sql.VarChar, password)
                 .execute("sp_GetUsuario"); // 
-            return result.recordset[0];
+            const userData = result.output.jsonResult;
+            return userData ? JSON.parse(userData) : null;
         } catch (error) {
             return error.message;
         }

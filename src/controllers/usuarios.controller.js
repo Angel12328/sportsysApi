@@ -24,27 +24,36 @@ export const obtenerUsuarioLogin = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const usuario = await UsuarioModel.login(email, password);
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
         res.status(200).json(usuario);
 
     } catch (error) {
         next(error); // Pasa el error al errorHandler global
     }
 };
-//crear procedimiento almacenado sp_GetUsuarioById
+
 export const obtenerUsuarioPorId = async (req, res, next) => {
     try {
         const { id } = req.params;
         const usuario = await UsuarioModel.getUserId(id);
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
         res.status(200).json(usuario);
     } catch (error) {
         next(error); // Pasa el error al errorHandler global
     }
 };
 
-//crear procedimiento almacenado sp_GetAllUsuarios
+
 export const obtenerUsuarios = async (req, res, next) => {
     try {
         const usuarios = await UsuarioModel.getAll();
+        if (!usuarios) {
+            return res.status(404).json({ message: 'No se encontraron usuarios' });
+        }
         res.status(200).json(usuarios);
     } catch (error) {
         next(error); // Pasa el error al errorHandler global
