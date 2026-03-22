@@ -3,6 +3,11 @@ import 'dotenv/config';
 // o si usas CommonJS: require('dotenv').config();
 
 import express from 'express';
+import { connectToDatabase } from './src/config/db.js';
+import healthRoutes from './src/routes/health.routes.js';
+import deportesRoutes from './src/routes/deportes.routes.js';
+import usuariosRoutes from './src/routes/usuarios.routes.js';
+import { errorHandler } from './src/middlewares/errorHandler.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,50 +20,16 @@ console.log(`Entorno de ejecución: ${process.env.NODE_ENV}`);
 app.use(express.json());
 
 // 2. Conectar a Base de Datos (SQL Server)
-import { connectToDatabase } from './src/config/db.js';
-
 // Iniciamos la conexión
 connectToDatabase();
 
-// --- PRIMEROS ENDPOINTS ---
+// 3. Rutas
+app.use('/api/health', healthRoutes);
+app.use('/api/deportes', deportesRoutes);
+app.use('/api/usuarios', usuariosRoutes);
 
-// GET /api/health - Endpoint de salud para verificar que el servidor está vivo
-app.get('/api/health', (req, res) => {
-    res.status(200).json({
-        status: 'ok',
-        message: 'La API de Sportsys está viva y funcionando'
-    });
-});
-
-// GET /api/deportes - Endpoint para obtener todos los deportes
-app.get('/api/deportes', (req, res) => {
-    // Mock temporal: Más adelante, aquí haremos una consulta SELECT a la base de datos
-    const deportes = [
-        { id: 1, nombre: 'Fútbol' },
-        { id: 2, nombre: 'Baloncesto' },
-        { id: 3, nombre: 'Béisbol' }
-    ];
-    res.status(200).json(deportes);
-});
-
-// POST /api/deportes - Endpoint para guardar un nuevo deporte
-app.post('/api/deportes', (req, res) => {
-    // Extraemos los datos del cuerpo (body) de la petición
-    const nuevoDeporte = req.body;
-
-    // Validación súper básica
-    if (!nuevoDeporte.nombre) {
-        return res.status(400).json({ error: 'El nombre del deporte es obligatorio' });
-    }
-
-    console.log('Guardando nuevo deporte en BD:', nuevoDeporte);
-
-    // Mock temporal: Más adelante, aquí haremos un INSERT en la base de datos
-    res.status(201).json({
-        message: 'Deporte creado con éxito',
-        data: nuevoDeporte
-    });
-});
+// 4. Middleware de manejo de errores (siempre al final de las rutas)
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`API de Gestión Deportiva corriendo en el puerto ${PORT}`);
