@@ -10,7 +10,7 @@ import usuariosRoutes from './src/routes/usuarios.routes.js';
 import { errorHandler } from './src/middlewares/errorHandler.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Ejemplo de acceso a variables
 console.log(`Entorno de ejecución: ${process.env.NODE_ENV}`);
@@ -24,9 +24,16 @@ app.use(express.json());
 connectToDatabase();
 
 // 3. Rutas
+app.get('/', (req, res) => {
+    res.send('API de Gestión Deportiva');
+});
+
 app.use('/api/health', healthRoutes);
 app.use('/api/deportes', deportesRoutes);
 app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/generos', generosRoutes);
+app.use('/api/paises', paisesRoutes);
+
 
 // 4. Middleware de manejo de errores (siempre al final de las rutas)
 app.use(errorHandler);

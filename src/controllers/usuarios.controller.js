@@ -3,9 +3,7 @@ import { UsuarioModel } from '../models/usuario.model.js';
 export const crearUsuario = async (req, res, next) => {
     try {
         const nuevoUsuario = req.body;
-        if (!nuevoUsuario.pnombre || !nuevoUsuario.snombre || !nuevoUsuario.papellido || !nuevoUsuario.sapellido || !nuevoUsuario.generoId || !nuevoUsuario.paisId || !nuevoUsuario.edad < 18 || !nuevoUsuario.email || !nuevoUsuario.password || !nuevoUsuario.rol) {
-            return res.status(400).json({ message: 'Revise que todos los campos obligatorios estén completos' });
-        }
+        
         // NOTA IMPORTANTE: Encriptar el password (ej: bcrypt.hash) ANTES de enviarlo al Model
         const hashedPassword = bcrypt.hashSync(nuevoUsuario.password, 10);
         console.log('Intentando guardar nuevo usuario en BD:', { ...nuevoUsuario, password: hashedPassword }); // 

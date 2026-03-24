@@ -37,6 +37,8 @@ export const UsuarioModel = {
                 .input('apellido', sql.VarChar(45), usuarioInfo.papellido)
                 .input('sapellido', sql.VarChar(45), usuarioInfo.sapellido)
                 .input('dni',sql.VarChar(13),usuarioInfo.dni)
+                .input('direccion', sql.VarChar(250), usuarioInfo.direccion)
+                .input('idPais', sql.Int, usuarioInfo.idPais)
                 .input('email', sql.VarChar(255), usuarioInfo.email)
                 .input('password', sql.VarChar(250), usuarioInfo.password)
                 .input('rol', sql.VarChar(45), usuarioInfo.rol)
