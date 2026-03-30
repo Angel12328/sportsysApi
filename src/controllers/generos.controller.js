@@ -32,7 +32,7 @@ export const actualizarGenero = async (req, res, next) => {
         const { id } = req.params;
         const generoActualizado = await generoModel.update(id, req.body);
         res.status(200).json({
-            message: 'Usuario actualizado con éxito',
+            message: 'Genero actualizado con éxito',
             data: generoActualizado
         });
     } catch (error) {
@@ -40,13 +40,13 @@ export const actualizarGenero = async (req, res, next) => {
     }
 };
 
-export const eliminarUsuario = async (req, res, next) => {
+export const eliminarGenero = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const generoEliminado = await generoModelModel.delete(id);
+        const generoEliminado = await generoModel.delete(id);
         res.status(200).json({
-            message: 'Usuario eliminado con éxito',
-            data: usuarioEliminado
+            message: 'Genero eliminado con éxito',
+            data: generoEliminado
         });
     } catch (error) {
         next(error); // Pasa el error al errorHandler global

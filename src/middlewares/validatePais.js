@@ -1,4 +1,4 @@
-export const validateGenero = (req, res, next) => {
+export const validatePais = (req, res, next) => {
     const nuevoGenero= req.body;
     if (!nuevoGenero.nombre ) {
         return res.status(400).json({ message: 'Revise que todos los campos obligatorios estén completos' });
@@ -6,7 +6,7 @@ export const validateGenero = (req, res, next) => {
     next(); // 
 };
 
-export const validateAccionGenero= (req, res, next) => {
+export const validateAccionPais= (req, res, next) => {
     const accion = req.body;
     if (!accion.accion ) {
         return res.status(400).json({ message: 'No se realizo mando ninguna accion' });
@@ -15,17 +15,13 @@ export const validateAccionGenero= (req, res, next) => {
 };
 
 
-export const validateIdGenero= (req, res, next) => {
+export const validateIdPais= (req, res, next) => {
     const accion = req.body;
-    if (!accion.idGenero) {
-        return res.status(400).json({ message: 'idGenero no especificado' });
+    if (!accion.idPais) {
+        return res.status(400).json({ message: 'idPais no especificado' });
     }
     next(); 
 };
-
-
-
-
 
 
 
