@@ -1,12 +1,13 @@
-import { paisModel } from "../models/genero.model";
+import { paisModel } from "../models/pais.model.js";
 
 export const obtenerPaises = async (req, res, next) => {
     try {
-        const paises = await paisModel.getAll();
-        if (!generos) {
-            return res.status(404).json({ message: 'No se encontraron usuarios' });
+        const { accion } = req.query; // Extrae ?accion=... de la URL
+        const paises = await paisModel.getAll(accion);
+        if (!paises) {
+            return res.status(404).json({ message: 'No se encontraron paises' });
         }
-        res.status(200).json(generos);
+        res.status(200).json(paises);
     } catch (error) {
         next(error); // Pasa el error al errorHandler global
     }

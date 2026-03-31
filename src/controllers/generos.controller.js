@@ -1,8 +1,9 @@
-import { generoModel } from "../models/genero.model";
+import { generoModel } from "../models/genero.model.js";
 
 export const obtenerGeneros = async (req, res, next) => {
     try {
-        const generos = await generoModel.getAll();
+        const { accion } = req.query; // Extrae ?accion=... de la URL {accion: 'accion'}
+        const generos = await generoModel.getAll(accion); // Pasa el objeto con la acción al modelo
         if (!generos) {
             return res.status(404).json({ message: 'No se encontraron usuarios' });
         }

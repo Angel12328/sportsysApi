@@ -1,18 +1,25 @@
-import { VarChar } from 'mssql';
+//ort { VarChar } from 'mssql';
 import { sql, dbConfig } from '../config/db.js';
 
-export const generoModel ={
+export const paisModel ={
     
-    async getAll(a) {
+    async getAll(accion) {
         try {
             // Se usa getConnection si ya hay un pool creado, o se crea uno
             const pool = await sql.connect(dbConfig);
             // IMPORTANTE: Asegúrate de tener la tabla 'Deportes' creada en la BD
             const result = await pool.request()
-                .input('accion',VarChar(5),a.accion)
-                .excecute('sp_Pais');
+                .input('idPais', sql.Int, null)
+                .input('Nombre', sql.VarChar(45), null)
+                .input('accion',sql.VarChar(5),accion)
+                .output('jsonResult', sql.NVarChar(sql.MAX)) // Se espera un output del SP con el resultado en formato JSON
+                .execute('sp_Pais');
 
-            return result.recordset;
+            // La data vive en result.output.jsonResult
+            const data = result.output.jsonResult;
+            console.log(JSON.parse(data));
+            // Como el SP devuelve un string JSON, hay que parsearlo
+            return data ? JSON.parse(data) : [];
         } catch (error) {
             console.error('Error en DeporteModel.getAll:', error);
             throw new Error('Error al obtener los paises de la base de datos');

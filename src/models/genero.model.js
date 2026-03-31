@@ -1,20 +1,28 @@
-import { VarChar } from 'mssql';
+//import { VarChar } from 'mssql';
 import { sql, dbConfig } from '../config/db.js';
 
-export const paisModel ={
+export const generoModel ={
     
-    async getAll(a) {
+    async getAll(accion) {
         try {
             // Se usa getConnection si ya hay un pool creado, o se crea uno
+            console.log('en model la accion es: ',accion);
             const pool = await sql.connect(dbConfig);
-            // IMPORTANTE: Asegúrate de tener la tabla 'Deportes' creada en la BD
+            //console.log(pool)
             const result = await pool.request()
-                .input('accion',VarChar(5),a.accion)
-                excecute('sp_Genero');
+                .input('idGenero', sql.Int, null)          
+                .input('Nombre', sql.VarChar(45), null)                
+                .input('accion',sql.VarChar(5),accion)
+                .output('jsonResult', sql.NVarChar(sql.MAX)) // Se espera un output del SP con el resultado en formato JSON
+                .execute('sp_Genero'); 
 
-            return result.recordset;
+            // La data vive en result.output.jsonResult
+            const data = result.output.jsonResult;
+            //console.log(JSON.parse(data));
+            // Como el SP devuelve un string JSON, hay que parsearlo
+            return data ? JSON.parse(data) : [];
         } catch (error) {
-            console.error('Error en DeporteModel.getAll:', error);
+            console.error('Error en generoModel.getAll:', error);
             throw new Error('Error al obtener los generos de la base de datos');
         }
     },
@@ -24,7 +32,7 @@ export const paisModel ={
             const pool = await sql.connect(dbConfig);
             // Asumiendo que DB tiene Id autoincremental
             const result = await pool.request()
-                .input('nombre', sql.VarChar, generoInfo.nombre)
+                .input('nombre', sql.VarChar(5), generoInfo.nombre)
                 .input('accion',VarChar(5),generoInfo.accion)
                 // Se retorna el registro insertado para MS SQL Server
                 .excecute('sp_Genero');

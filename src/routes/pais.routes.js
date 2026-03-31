@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { actualizarPais, crearPais, eliminarPais, obtenerPaises } from "../controllers/pais.controller";
-import { validateAccionPais, validateIdPais, validatePais } from "../middlewares/validatePais";
+import { actualizarPais, crearPais, eliminarPais, obtenerPaises } from "../controllers/pais.controller.js";
+import { validateAccionPais, validateIdPais, validatePais } from "../middlewares/validatePais.js";
 
 const router = Router();
 

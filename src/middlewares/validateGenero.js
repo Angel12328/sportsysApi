@@ -7,8 +7,10 @@ export const validateGenero = (req, res, next) => {
 };
 
 export const validateAccionGenero= (req, res, next) => {
-    const accion = req.body;
-    if (!accion.accion ) {
+    console.log(req.query);
+    const { accion } = req.query; // Extrae ?accion=... de la URL
+    console.log(accion);
+    if (!accion) {
         return res.status(400).json({ message: 'No se realizo mando ninguna accion' });
     }
     next(); 

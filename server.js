@@ -3,10 +3,13 @@ import 'dotenv/config';
 // o si usas CommonJS: require('dotenv').config();
 
 import express from 'express';
+import cors from 'cors';
 import { connectToDatabase } from './src/config/db.js';
 import healthRoutes from './src/routes/health.routes.js';
 import deportesRoutes from './src/routes/deportes.routes.js';
 import usuariosRoutes from './src/routes/usuarios.routes.js';
+import generosRoutes from './src/routes/generos.routes.js';
+import paisesRoutes from './src/routes/pais.routes.js';
 import { errorHandler } from './src/middlewares/errorHandler.js';
 
 const app = express();
@@ -15,6 +18,8 @@ const PORT = process.env.PORT || 5000;
 // Ejemplo de acceso a variables
 console.log(`Entorno de ejecución: ${process.env.NODE_ENV}`);
 
+// Habilita CORS para todas las peticiones
+app.use(cors());
 // 1. Middlewares globales
 // Permite que la API reciba datos en formato JSON en el body (para POST, PUT, etc.)
 app.use(express.json());
