@@ -1,3 +1,6 @@
+import pkg from 'mssql';
+const { MAX } = pkg;
+
 import { sql, dbConfig } from '../config/db.js';
 
 export const UsuarioModel = {
@@ -29,27 +32,35 @@ export const UsuarioModel = {
 
     async create(usuarioInfo) {
         try {
+            const telefonosJSON = JSON.stringify(
+                Array.isArray(usuarioInfo.telefonos) 
+                ? usuarioInfo.telefonos.map(t => ({ numero: t })) // Formato objeto para que coincida con tu WITH en SQL
+                : [{ numero: usuarioInfo.telefonos }]
+            );           
             const pool = await sql.connect(dbConfig);
             
             await pool.request()
-                .input('nombre', sql.VarChar(45), usuarioInfo.pnombre)
-                .input('snombre', sql.VarChar(45), usuarioInfo.snombre)
-                .input('apellido', sql.VarChar(45), usuarioInfo.papellido)
-                .input('sapellido', sql.VarChar(45), usuarioInfo.sapellido)
-                .input('dni',sql.VarChar(13),usuarioInfo.dni)
+                .input('pNombre', sql.VarChar(45), usuarioInfo.pNombre)
+                .input('sNombre', sql.VarChar(45), usuarioInfo.sNombre)
+                .input('pApellido', sql.VarChar(45), usuarioInfo.pApellido)
+                .input('sApellido', sql.VarChar(45), usuarioInfo.sApellido)
+                .input('generoId', sql.Int, usuarioInfo.generoId)
+                .input('edad', sql.Int, usuarioInfo.edad)
+                .input('dni',sql.VarChar(20),usuarioInfo.dni || null)
                 .input('direccion', sql.VarChar(250), usuarioInfo.direccion)
-                .input('idPais', sql.Int, usuarioInfo.idPais)
-                .input('email', sql.VarChar(255), usuarioInfo.email)
+                .input('paisId', sql.Int, usuarioInfo.paisId)
+                .input('correo', sql.VarChar(255), usuarioInfo.correo)
                 .input('password', sql.VarChar(250), usuarioInfo.password)
                 .input('rol', sql.VarChar(45), usuarioInfo.rol)
-                .input('fotoPerfil', sql.VarChar(2048), usuarioInfo.fotoPerfil)
-                .input('cargo', sql.VarChar(45), usuarioInfo.cargo)
-                .input('equipoId', sql.Int, usuarioInfo.equipoId)
-                .input('ligaId', sql.Int, usuarioInfo.ligaId)
-                .input('telefonos', sql.VarChar(2048), usuarioInfo.telefonos)
+                .input('fotoPerfil', sql.VarChar(2048), usuarioInfo.fotoPerfil || null)
+                .input('cargo', sql.VarChar(45), usuarioInfo.cargo || null)
+                .input('equipoId', sql.Int, usuarioInfo.equipoId || null)
+                .input('ligaId', sql.Int, usuarioInfo.ligaId || null)
+                .input('telefonos', sql.NVarChar(sql.MAX), telefonosJSON || null)
                 .execute("sp_InsertUsuario"); 
-            return { message: 'Usuario creado con éxito'};
+            return { success: true, message: 'Usuario creado con éxito' };
         } catch (error) {
+            console.log(error);
             return error.message;
         }
     },

@@ -1,17 +1,18 @@
 import { UsuarioModel } from '../models/usuario.model.js';
+import bcrypt from 'bcrypt';
 
 export const crearUsuario = async (req, res, next) => {
     try {
+        const rol = req.query.rol; // Extrae ?rol=... de la URL
         const nuevoUsuario = req.body;
-        
+        nuevoUsuario.rol= rol;
         // NOTA IMPORTANTE: Encriptar el password (ej: bcrypt.hash) ANTES de enviarlo al Model
         const hashedPassword = bcrypt.hashSync(nuevoUsuario.password, 10);
         console.log('Intentando guardar nuevo usuario en BD:', { ...nuevoUsuario, password: hashedPassword }); // 
-
-        const usuarioCreado = await UsuarioModel.create(nuevoUsuario);
+        nuevoUsuario.password = hashedPassword; // Reemplaza el password plano por el hasheado
+        await UsuarioModel.create(nuevoUsuario);
         res.status(201).json({
             message: 'Usuario creado con éxito',
-            data: usuarioCreado
         });
     } catch (error) {
         next(error); // Pasa el error al errorHandler global
