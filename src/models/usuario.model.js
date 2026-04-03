@@ -92,14 +92,16 @@ export const UsuarioModel = {
         }
     },
 
-    async login(email, password) {
+    async login(info) {
         try {
             const pool = await sql.connect(dbConfig);
             const result = await pool.request()
-                .input('email', sql.VarChar, email)
-                .input('password', sql.VarChar, password)
+                .input('email', sql.VarChar, info.email)
+                .input('password', sql.VarChar, info.password)
+                .output('jsonResult', sql.NVarChar(sql.MAX)) // Se espera un output del SP con el resultado en formato JSON
                 .execute("sp_GetUsuario"); // 
             const userData = result.output.jsonResult;
+            console.log('userData:',userData);
             return userData ? JSON.parse(userData) : null;
         } catch (error) {
             return error.message;
