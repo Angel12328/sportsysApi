@@ -21,11 +21,13 @@ export const crearUsuario = async (req, res, next) => {
 
 export const obtenerUsuarioLogin = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
-        const usuario = await UsuarioModel.login(email, password);
+        const info = req.body;
+        const usuario = await UsuarioModel.login(info);
         if (!usuario) {
+            console.log('Login fallido para email:', info.email);
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
+        console.log('Login exitoso para email:', info.email);
         res.status(200).json(usuario);
 
     } catch (error) {

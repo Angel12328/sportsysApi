@@ -96,8 +96,7 @@ export const UsuarioModel = {
         try {
             const pool = await sql.connect(dbConfig);
             const result = await pool.request()
-                .input('email', sql.VarChar, info.email)
-                .input('password', sql.VarChar, info.password)
+                .input('email', sql.VarChar(255), info.email)
                 .output('jsonResult', sql.NVarChar(sql.MAX)) // Se espera un output del SP con el resultado en formato JSON
                 .execute("sp_GetUsuario"); // 
             const userData = result.output.jsonResult;

@@ -5,7 +5,7 @@ import { validateLogin, validateUsuario } from '../middlewares/validateUsuario.j
 const router = Router();
 
 router.post('/create', validateUsuario, crearUsuario);
-router.get('/login',validateLogin, obtenerUsuarioLogin);
+router.post('/login',validateLogin, obtenerUsuarioLogin);
 router.get('/', obtenerUsuarios);
 router.get('/:id', obtenerUsuarioPorId);
 router.put('/:id', actualizarUsuario);
