@@ -2,7 +2,11 @@ import { DeporteModel } from '../models/deporte.model.js';
 
 export const obtenerDeportes = async (req, res, next) => {
     try {
-        const deportes = await DeporteModel.getAll();
+        const { accion } = req.query; // Extrae ?accion=... de la URL {accion: 'accion'}
+        const deportes = await DeporteModel.getAll(accion); // Pasa el objeto con la acción al modelo
+        if (!deportes) {
+            return res.status(404).json({ message: 'No se encontraron deportes' });
+        }
         res.status(200).json(deportes);
     } catch (error) {
         next(error); // Pasa el error al errorHandler global

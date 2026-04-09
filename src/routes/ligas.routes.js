@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { validateLigas } from "../middlewares/validateLiga";
-import { obtenerLigas } from "../controllers/ligas.controller";
+import { obtenerLigas, obtenerLigasDefault } from "../controllers/ligas.controller.js";
+import {validateLigas} from "../middlewares/validateLiga.js";
 
 const router = Router();
 
 
-router.get('/ligas',validateLigas,obtenerLigas);
+router.get('/',validateLigas,obtenerLigas);
+router.get('/default',validateLigas,obtenerLigasDefault);
 
 export default router;

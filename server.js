@@ -11,6 +11,7 @@ import usuariosRoutes from './src/routes/usuarios.routes.js';
 import generosRoutes from './src/routes/generos.routes.js';
 import paisesRoutes from './src/routes/pais.routes.js';
 import ligasRoutes from './src/routes/ligas.routes.js';
+import divisionesRoutes from './src/routes/divisiones.routes.js';
 import { errorHandler } from './src/middlewares/errorHandler.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -39,6 +40,7 @@ app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/generos', generosRoutes);
 app.use('/api/paises', paisesRoutes);
 app.use('/api/ligas', ligasRoutes);
+app.use('/api/divisiones', divisionesRoutes);
 
 
 // 4. Middleware de manejo de errores (siempre al final de las rutas)

@@ -1,26 +1,25 @@
 import { sql, dbConfig } from '../config/db.js';
 
 export const DeporteModel = {
-    async getAll() {
+    async getAll(accion) {
         try {
             // Se usa getConnection si ya hay un pool creado, o se crea uno
+            console.log('en model de deportes la accion es: ',accion);
             const pool = await sql.connect(dbConfig);
-            // IMPORTANTE: Asegúrate de tener la tabla 'Deportes' creada en la BD
-            const result = await pool.request().query('SELECT * FROM Deportes');
+            //console.log(pool)
+            const result = await pool.request()
+                .input('Nombre', sql.VarChar(50), null)          
+                .input('generoId', sql.Int, null)                
+                .input('accion',sql.VarChar(5),accion)
+                .input('idDeporte',sql.Int, null)
+                .output('jsonResult', sql.NVarChar(sql.MAX)) // Se espera un output del SP con el resultado en formato JSON
+                .execute('sp_Deporte'); 
 
-            // Si la tabla no existe o está vacía y quieres enviar un mock temporal, 
-            // puedes descomentar esto:
-            /*
-            if (result.recordset.length === 0) {
-                return [
-                    { id: 1, nombre: 'Fútbol' },
-                    { id: 2, nombre: 'Baloncesto' },
-                    { id: 3, nombre: 'Béisbol' }
-                ];
-            }
-            */
-
-            return result.recordset;
+            // La data vive en result.output.jsonResult
+            const data = result.output.jsonResult;
+            console.log(JSON.parse(data));
+            // Como el SP devuelve un string JSON, hay que parsearlo
+            return data ? JSON.parse(data) : [];
         } catch (error) {
             console.error('Error en DeporteModel.getAll:', error);
             throw new Error('Error al obtener los deportes de la base de datos');
